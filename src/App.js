@@ -20,10 +20,27 @@ function Logo() {
 }
 
 function Form() {
+  // receive an event from form (onSubmit)
+  function handleSubmit(e) {
+    // avoid the submission
+    e.preventDefault();
+    console.log(e);
+  }
   return (
-    <div className="add-form">
+    // onSubmit={handleSubmit} is the same as onSubmit={(e) => handleSubmit(e)}
+    <form className="add-form" onSubmit={handleSubmit}>
       <h3>What do you need for your 😍 trip?</h3>
-    </div>
+      <select>
+        {/* (currentValue, index) */}
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+      <input type="text" placeholder="Item..." />
+      <button>Add</button>
+    </form>
   );
 }
 
@@ -32,7 +49,7 @@ function PackingList() {
     <div className="list">
       <ul>
         {initialItems.map((item) => (
-          <Item item={item} />
+          <Item item={item} key={item.id} />
         ))}
       </ul>
     </div>
