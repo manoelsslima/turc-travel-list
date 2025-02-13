@@ -24,6 +24,15 @@ function Logo() {
 function Form() {
   const [quantity, setQuantity] = useState(1);
   const [description, setDescription] = useState("");
+  const [items, setItems] = useState([]);
+
+  function handleAddItems(item) {
+    // that cannot be done because we cannot mutate State
+    // setItems((items) => items.push(item));
+
+    // creating a new array with the new item. This way, we are not mutating State
+    setItems((items) => [...items, item]);
+  }
 
   // receive an event from form (onSubmit)
   function handleSubmit(e) {
@@ -36,7 +45,7 @@ function Form() {
     const newItem = { description, quantity, packed: false, id: Date.now() };
     console.log(newItem);
 
-    initialItems.push(newItem);
+    handleAddItems(newItem);
 
     setQuantity(1);
     setDescription("");
