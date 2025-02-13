@@ -7,11 +7,23 @@ const initialItems = [
 ];
 
 export default function App() {
+  const [items, setItems] = useState([]);
+
+  // we will pass the function to Form
+  function handleAddItems(item) {
+    // that cannot be done because we cannot mutate State
+    // setItems((items) => items.push(item));
+
+    // creating a new array with the new item. This way, we are not mutating State
+    setItems((items) => [...items, item]);
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      {/* for convention: when passing functions, add de preposition "on" */}
+      <Form onAddItems={handleAddItems} />
+      <PackingList items={items} />
       <Stats />
     </div>
   );
@@ -21,18 +33,9 @@ function Logo() {
   return <h1>🌴 Far Away 👜</h1>;
 }
 
-function Form() {
+function Form({ onAddItems }) {
   const [quantity, setQuantity] = useState(1);
   const [description, setDescription] = useState("");
-  const [items, setItems] = useState([]);
-
-  function handleAddItems(item) {
-    // that cannot be done because we cannot mutate State
-    // setItems((items) => items.push(item));
-
-    // creating a new array with the new item. This way, we are not mutating State
-    setItems((items) => [...items, item]);
-  }
 
   // receive an event from form (onSubmit)
   function handleSubmit(e) {
@@ -45,7 +48,8 @@ function Form() {
     const newItem = { description, quantity, packed: false, id: Date.now() };
     console.log(newItem);
 
-    handleAddItems(newItem);
+    // calling with the same name passed as prop
+    onAddItems(newItem);
 
     setQuantity(1);
     setDescription("");
@@ -81,11 +85,11 @@ function Form() {
   );
 }
 
-function PackingList() {
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item item={item} key={item.id} />
         ))}
       </ul>
