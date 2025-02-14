@@ -17,7 +17,7 @@ export default function App() {
     setItems((items) => items.filter((item) => item.id !== id));
   }
 
-  // update item
+  // update item. Destructure the item, update the property and add to a list
   function handleToggleItem(id) {
     setItems((items) =>
       items.map((item) =>
