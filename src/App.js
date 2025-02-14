@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export default function App() {
   const [items, setItems] = useState([]);
+  const [sortedItems, setSortedItems] = useState([]);
 
   // we will pass the function to Form
   function handleAddItems(item) {
@@ -28,6 +29,10 @@ export default function App() {
     );
   }
 
+  function handleClearList() {
+    setSortedItems([]);
+  }
+
   return (
     <div className="app">
       <Logo />
@@ -37,6 +42,8 @@ export default function App() {
         items={items}
         onDeleteItems={handleDeleteItems}
         onToggleItem={handleToggleItem}
+        onSortItems={sortedItems}
+        onClear
       />
       <Stats items={items} />
     </div>
@@ -99,30 +106,36 @@ function Form({ onAddItems }) {
   );
 }
 
-function PackingList({ items, onDeleteItems, onToggleItem }) {
+function PackingList({
+  items,
+  onDeleteItems,
+  onToggleItem,
+  onSortItems,
+  handleClearList,
+}) {
   const [sortBy, setSortBy] = useState("input");
-  let sortedItems;
+  // let sortedItems;
 
   if (sortBy === "input") {
-    sortedItems = items;
+    onSortItems = items;
   }
 
   if (sortBy === "description") {
     // slice() gets a copy of items array
-    sortedItems = items
+    onSortItems = items
       .slice()
       .sort((a, b) => a.description.localeCompare(b.description));
   }
 
   if (sortBy === "packed") {
-    sortedItems = items
+    onSortItems = items
       .slice()
       .sort((a, b) => Number(a.packed) - Number(b.packed));
   }
   return (
     <div className="list">
       <ul>
-        {sortedItems.map((item) => (
+        {onSortItems.map((item) => (
           <Item
             item={item}
             key={item.id}
@@ -138,6 +151,7 @@ function PackingList({ items, onDeleteItems, onToggleItem }) {
           <option value="description">Sort by description</option>
           <option value="packed">Sort by packed status</option>
         </select>
+        <button onClick={() => handleClearList}>Clear list</button>
       </div>
     </div>
   );
